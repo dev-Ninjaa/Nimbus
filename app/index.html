@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Nimbus</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
+
+    <style>
+      body {
+        color: #fff;
+        -webkit-backface-visibility: hidden;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        text-rendering: optimizeLegibility;
+        box-sizing: border-box;
+      }
+
+      @media (min-resolution: 2dppx) {
+        * {
+          text-rendering: geometricPrecision;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="mount"></div>
+
+    <script>
+      start = performance.now();
+      console.log('Starting to load bundle.js...');
+      window.addEventListener('error', (e) => {
+        console.error('Error loading resource:', e.filename || e.target.src, e.message);
+      });
+    </script>
+    <script src="renderer/bundle.js" onerror="console.error('Failed to load bundle.js')"></script>
+    <script>
+      console.log('bundle.js loaded successfully');
+      console.log('total init time', performance.now() - start);
+      console.log('mount element:', document.getElementById('mount'));
+    </script>
+  </body>
+</html>

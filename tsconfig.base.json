@@ -12,11 +12,13 @@
     "removeComments": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "strict": true,
     "target": "ES2022",
     "typeRoots": [
-      "./node_modules/@types"
+      "./node_modules/@types",
+      "./typings"
     ]
   }
 }

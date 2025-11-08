@@ -58,7 +58,7 @@
     "webGLRenderer": false,
     "webLinksActivationKey": "",
     "disableLigatures": false,
-    "disableAutoUpdates": false,
+    "disableAutoUpdates": true,
     "autoUpdatePlugins": true,
     "preserveCWD": true,
     "screenReaderMode": false,

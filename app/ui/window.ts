@@ -15,7 +15,7 @@ import type {configOptions} from '../../typings/config';
 import {execCommand} from '../commands';
 import {getDefaultProfile} from '../config';
 import {icon, homeDirectory} from '../config/paths';
-import fetchNotifications from '../notifications';
+// import fetchNotifications from '../notifications'; // Disabled to prevent EPIPE errors from broken service
 import notify from '../notify';
 import {decorateSessionOptions, decorateSessionClass} from '../plugins';
 import createRPC from '../rpc';
@@ -113,7 +113,7 @@ export function newWindow(
     // the callback passed as parameter, and deleted right after.
     (app.windowCallback || fn)(window);
     app.windowCallback = undefined;
-    fetchNotifications(window);
+    // fetchNotifications(window); // Disabled to prevent EPIPE errors from broken service
     // auto updates
     if (!isDev) {
       updater(window);
@@ -204,7 +204,9 @@ export function newWindow(
         }
       } catch (err: any) {
         // Handle errors when window is destroyed during data emission
-        if (err.code !== 'EPIPE' && err.code !== 'ERR_IPC_CHANNEL_CLOSED') {
+        if (err.code === 'EPIPE' || err.code === 'ERR_STREAM_DESTROYED' || err.code === 'ERR_IPC_CHANNEL_CLOSED') {
+          console.warn('Session data emission failed - stream closed:', err.message);
+        } else {
           console.error('Error emitting session data:', err);
         }
       }

@@ -12,6 +12,15 @@ process.on('uncaughtException', (err: any) => {
   throw err;
 });
 
+// Handle unhandled promise rejections that might be related to stream errors
+process.on('unhandledRejection', (reason: any, promise) => {
+  if (reason && (reason.code === 'EPIPE' || reason.code === 'ERR_STREAM_DESTROYED')) {
+    console.warn('Unhandled promise rejection with EPIPE error, ignoring:', reason.message);
+    return;
+  }
+  console.error('Unhandled promise rejection at:', promise, 'reason:', reason);
+});
+
 // Print diagnostic information for a few arguments instead of running Nimbus.
 if (['--help', '-v', '--version'].includes(process.argv[1])) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -98,7 +107,14 @@ async function installDevExtensions(isDev_: boolean) {
   const forceDownload = Boolean(process.env.UPGRADE_EXTENSIONS);
 
   return Promise.all(
-    extensions.map((extension) => installer(extension, {forceDownload, loadExtensionOptions: {allowFileAccess: true}}))
+    extensions.map(async (extension) => {
+      try {
+        return await installer(extension, {forceDownload, loadExtensionOptions: {allowFileAccess: true}});
+      } catch (err: any) {
+        console.warn(`Failed to install extension ${extension}:`, err.message);
+        return null;
+      }
+    })
   );
 }
 

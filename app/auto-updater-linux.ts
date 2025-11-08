@@ -36,7 +36,15 @@ class AutoUpdater extends EventEmitter implements Electron.AutoUpdater {
           this.emit('update-available', {}, notes, name, date);
         });
       })
-      .catch(this.emitError.bind(this));
+      .catch((err) => {
+        // Handle EPIPE and network errors gracefully
+        if (err.code === 'EPIPE' || err.code === 'ECONNRESET' || err.code === 'ENOTFOUND') {
+          console.warn('Update check failed due to network issue, skipping:', err.message);
+          this.emit('update-not-available');
+        } else {
+          this.emitError(err);
+        }
+      });
   }
 
   emitError(error: string | Error) {

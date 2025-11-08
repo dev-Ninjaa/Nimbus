@@ -41,9 +41,16 @@ const _importConf = () => {
   // Import user config
   let userCfg: rawConfig;
   try {
-    userCfg = JSON.parse(readFileSync(cfgPath, 'utf8'));
+    const userConfigContent = readFileSync(cfgPath, 'utf8');
+    try {
+      userCfg = JSON.parse(userConfigContent);
+    } catch (parseErr: any) {
+      console.warn('Config file contains invalid JSON:', parseErr.message);
+      notify("Couldn't parse config file. Using default config instead.");
+      userCfg = JSON.parse(defaultCfgRaw);
+    }
   } catch (err) {
-    notify("Couldn't parse config file. Using default config instead.");
+    console.log('Config file not found or inaccessible, using defaults');
     userCfg = JSON.parse(defaultCfgRaw);
   }
 

@@ -51,10 +51,10 @@ const Tabs = forwardRef<HTMLElement, TabsProps>((props, ref) => {
       <style jsx>{`
         .tabs_nav {
           font-size: 12px;
-          height: 34px;
-          line-height: 34px;
+          height: ${isMac ? '28px' : '34px'};
+          line-height: ${isMac ? '28px' : '34px'};
           vertical-align: middle;
-          color: #9b9b9b;
+          color: ${isMac ? '#86868b' : '#9b9b9b'};
           cursor: default;
           position: relative;
           -webkit-user-select: none;
@@ -62,6 +62,9 @@ const Tabs = forwardRef<HTMLElement, TabsProps>((props, ref) => {
           top: ${isMac ? '0px' : '34px'};
           display: flex;
           flex-flow: row;
+          background: ${isMac ? 'linear-gradient(to bottom, #f6f6f6 0%, #e8e8e8 100%)' : 'transparent'};
+          border-bottom: ${isMac ? '1px solid #d1d1d1' : 'none'};
+          box-shadow: ${isMac ? '0 1px 0 rgba(255,255,255,0.5) inset' : 'none'};
         }
 
         .tabs_hiddenNav {
@@ -80,11 +83,13 @@ const Tabs = forwardRef<HTMLElement, TabsProps>((props, ref) => {
         }
 
         .tabs_list {
-          max-height: 34px;
+          max-height: ${isMac ? '28px' : '34px'};
           display: flex;
           flex-flow: row;
           margin-left: ${isMac ? '76px' : '0'};
           flex-grow: 1;
+          align-items: ${isMac ? 'flex-end' : 'center'};
+          padding-bottom: ${isMac ? '4px' : '0'};
         }
 
         .tabs_fullScreen {

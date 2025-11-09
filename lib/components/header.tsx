@@ -244,11 +244,13 @@ const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
         }
 
         .header_closeWindow:hover {
-          color: #fe354e;
+          background-color: #e81123;
+          color: #fff;
         }
 
         .header_closeWindow:active {
-          color: #fe354e;
+          background-color: #f1707a;
+          color: #000;
         }
       `}</style>
     </header>

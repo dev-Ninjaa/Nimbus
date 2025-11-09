@@ -50,13 +50,26 @@ export function newWindow(
     webPreferences: {
       nodeIntegration: true,
       navigateOnDragDrop: true,
-      contextIsolation: false
+      contextIsolation: false,
+      // Suppress extension permission warnings
+      webSecurity: true,
+      allowRunningInsecureContent: false,
+      experimentalFeatures: false
     },
     ...options_
   };
   const window = new BrowserWindow(app.plugins.getDecoratedBrowserOptions(winOpts));
 
   window.profileName = profileName;
+
+  // Suppress extension permission warnings at session level
+  window.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
+    // Deny all extension-related permissions to suppress warnings
+    if (permission === 'notifications' || permission === 'geolocation' || permission === 'media' || permission === 'midi' || permission === 'pointerLock' || permission === 'fullscreen' || permission === 'openExternal') {
+      return callback(false);
+    }
+    callback(true);
+  });
 
   // Enable remote module on this window
   remoteEnable(window.webContents);

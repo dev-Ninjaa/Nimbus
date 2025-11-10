@@ -3,7 +3,8 @@ import {dirname, resolve} from 'path';
 import {StringDecoder} from 'string_decoder';
 
 import defaultShell from 'default-shell';
-import type {IPty, IWindowsPtyForkOptions, spawn as npSpawn} from 'node-pty';
+import {spawn as npSpawn} from 'node-pty';
+import type {IPty, IWindowsPtyForkOptions} from 'node-pty';
 import osLocale from 'os-locale';
 import shellEnv from 'shell-env';
 
@@ -20,9 +21,8 @@ const createNodePtyError = () =>
 
 let spawn: typeof npSpawn;
 try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  spawn = require('node-pty').spawn;
-} catch (err) {
+  spawn = npSpawn;
+} catch {
   throw createNodePtyError();
 }
 
@@ -165,9 +165,8 @@ export default class Session extends EventEmitter {
 
     try {
       this.pty = spawn(shell, shellArgs, options);
-    } catch (_err) {
-      const err = _err as {message: string};
-      if (/is not a function/.test(err.message)) {
+    } catch (err) {
+      if (err instanceof Error && /is not a function/.test(err.message)) {
         throw createNodePtyError();
       } else {
         throw err;

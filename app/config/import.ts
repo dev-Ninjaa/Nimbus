@@ -16,15 +16,15 @@ const _importConf = () => {
 
   try {
     migrateNimbus3Config();
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
   }
 
   let defaultCfgRaw = '{}';
   try {
     defaultCfgRaw = readFileSync(defaultCfg, 'utf8');
-  } catch (err) {
-    console.log(err);
+  } catch {
+    // ignore
   }
   const _defaultCfg = JSON.parse(defaultCfgRaw) as rawConfig;
 
@@ -32,7 +32,7 @@ const _importConf = () => {
   let content = '{}';
   try {
     content = readFileSync(defaultPlatformKeyPath(), 'utf8');
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
   }
   const mapping = JSON.parse(content) as Record<string, string | string[]>;
@@ -49,7 +49,7 @@ const _importConf = () => {
       notify("Couldn't parse config file. Using default config instead.");
       userCfg = JSON.parse(defaultCfgRaw);
     }
-  } catch (err) {
+  } catch {
     console.log('Config file not found or inaccessible, using defaults');
     userCfg = JSON.parse(defaultCfgRaw);
   }

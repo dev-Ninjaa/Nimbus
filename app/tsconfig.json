@@ -3,7 +3,10 @@
   "compilerOptions": {
     "declarationDir": "../dist/tmp/appdts/",
     "outDir": "../target/",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext"]
   },
   "include": [
     "./**/*",

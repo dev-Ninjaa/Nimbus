@@ -255,7 +255,7 @@ export type NotificationProps = {
   backgroundColor: string;
   color?: string;
   dismissAfter?: number;
-  onDismiss: Function;
+  onDismiss: () => void;
   text?: string | null;
   userDismissable?: boolean | null;
   userDismissColor?: string;

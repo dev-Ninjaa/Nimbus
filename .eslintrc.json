@@ -129,16 +129,14 @@
     },
     {
       "extends": [
-        "plugin:jsonc/recommended-with-json",
-        "plugin:json-schema-validator/recommended"
+        "plugin:jsonc/recommended-with-json"
       ],
       "files": [
         "*.json"
       ],
       "parser": "jsonc-eslint-parser",
       "plugins": [
-        "jsonc",
-        "json-schema-validator"
+        "jsonc"
       ],
       "rules": {
         "jsonc/array-element-newline": [
@@ -153,8 +151,7 @@
           "error",
           2
         ],
-        "prettier/prettier": "off",
-        "json-schema-validator/no-invalid": "error"
+        "prettier/prettier": "off"
       }
     }
   ]

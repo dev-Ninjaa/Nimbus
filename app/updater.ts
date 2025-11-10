@@ -17,13 +17,13 @@ const isLinux = platform === 'linux';
 const autoUpdater: AutoUpdater = isLinux ? autoUpdaterLinux : electron.autoUpdater;
 
 const getDecoratedConfigWithRetry = async () => {
-  return await retry(() => {
+  return retry(() => {
     const content = getDecoratedConfig(getDefaultProfile());
     if (!content) {
       throw new Error('No config content loaded');
     }
     return content;
-  });
+  }) as Promise<{disableAutoUpdates: boolean; updateChannel: string}>;
 };
 
 const checkForUpdates = async () => {
@@ -85,34 +85,35 @@ const updater = (win: BrowserWindow) => {
   };
 
   if (isLinux) {
-    (autoUpdater as any).on('update-available', onupdate);
+    autoUpdater.on('update-available', onupdate);
   } else {
-    (autoUpdater as any).on('update-downloaded', onupdate);
+    autoUpdater.on('update-downloaded', onupdate);
   }
 
   rpc.once('quit and install', () => {
     autoUpdater.quitAndInstall();
   });
 
-  app.config.subscribe(async () => {
-    const {updateChannel} = await getDecoratedConfigWithRetry();
-    const newUpdateIsCanary = isCanary(updateChannel);
+  app.config.subscribe(() => {
+    void getDecoratedConfigWithRetry().then(({updateChannel}) => {
+      const newUpdateIsCanary = isCanary(updateChannel);
 
-    if (newUpdateIsCanary !== canaryUpdates) {
-      const feedURL = buildFeedUrl(newUpdateIsCanary, version);
+      if (newUpdateIsCanary !== canaryUpdates) {
+        const feedURL = buildFeedUrl(newUpdateIsCanary, version);
 
-      autoUpdater.setFeedURL({url: feedURL});
-      void checkForUpdates();
+        autoUpdater.setFeedURL({url: feedURL});
+        void checkForUpdates();
 
-      canaryUpdates = newUpdateIsCanary;
-    }
+        canaryUpdates = newUpdateIsCanary;
+      }
+    });
   });
 
   win.on('close', () => {
     if (isLinux) {
-      (autoUpdater as any).removeListener('update-available', onupdate);
+      autoUpdater.removeListener('update-available', onupdate);
     } else {
-      (autoUpdater as any).removeListener('update-downloaded', onupdate);
+      autoUpdater.removeListener('update-downloaded', onupdate);
     }
   });
 };

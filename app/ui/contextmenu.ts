@@ -33,7 +33,9 @@ const contextMenuTemplate = (
     execCommand,
     getProfiles().map((p) => p.name)
   ).submenu as MenuItemConstructorOptions[];
-  const _edit = (editMenu(commandKeys, execCommand).submenu as MenuItemConstructorOptions[]).filter(filterCutCopy.bind(null, selection));
+  const _edit = (editMenu(commandKeys, execCommand).submenu as MenuItemConstructorOptions[]).filter(
+    filterCutCopy.bind(null, selection)
+  );
   return _edit
     .concat(separator, _shell)
     .filter((menuItem) => !Object.prototype.hasOwnProperty.call(menuItem, 'enabled') || menuItem.enabled);

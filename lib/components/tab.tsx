@@ -45,8 +45,8 @@ const Tab = forwardRef<HTMLLIElement, TabProps>((props, ref) => {
         </span>
         <i className="tab_icon" onClick={props.onClose}>
           <svg className="tab_shape" viewBox="0 0 12 12" width="12" height="12">
-            <circle cx="6" cy="6" r="5.5" fill="currentColor" opacity="0.8"/>
-            <path d="M4 4 L8 8 M8 4 L4 8" stroke="white" strokeWidth="1" strokeLinecap="round"/>
+            <circle cx="6" cy="6" r="5.5" fill="currentColor" opacity="0.8" />
+            <path d="M4 4 L8 8 M8 4 L4 8" stroke="white" strokeWidth="1" strokeLinecap="round" />
           </svg>
         </i>
         {props.customChildren}

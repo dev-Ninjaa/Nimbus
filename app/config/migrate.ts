@@ -178,10 +178,7 @@ export const migrateNimbus3Config = () => {
     }
   } catch (e) {
     console.error(e);
-    notify(
-      'Nimbus 4',
-      `Failed to migrate your config.\nDefault config will be created instead at ${cfgPath}`
-    );
+    notify('Nimbus 4', `Failed to migrate your config.\nDefault config will be created instead at ${cfgPath}`);
     newCfgData = defaultCfgData;
   }
   _write(cfgPath, JSON.stringify(newCfgData, null, 2));

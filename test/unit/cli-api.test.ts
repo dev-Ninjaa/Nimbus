@@ -2,9 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import test from 'ava';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const proxyquire = require('proxyquire').noCallThru();
+import proxyquire from 'proxyquire';
 
 test('existsOnNpm() builds the url for non-scoped packages', (t) => {
   let getUrl: string;

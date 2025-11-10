@@ -39,7 +39,7 @@ const addSymlink = async (silent: boolean) => {
       try {
         mkdirpSync(path.dirname(cliLinkPath));
       } catch (err) {
-        throw `Failed to create directory ${path.dirname(cliLinkPath)} - ${err}`;
+        throw new Error(`Failed to create directory ${path.dirname(cliLinkPath)} - ${err}`);
       }
     }
     await symLink(cliScriptPath, cliLinkPath);
@@ -71,7 +71,7 @@ sudo ln -sf "${cliScriptPath}" "${cliLinkPath}"`,
         clipboard.writeText(`sudo ln -sf "${cliScriptPath}" "${cliLinkPath}"`);
       }
     }
-    throw error;
+    throw new Error(error);
   }
 };
 
@@ -94,7 +94,7 @@ const addBinToUserPath = () => {
       if (pathItem) {
         type = Registry.queryValueRaw(envKey, pathItem)!.type;
         if (type !== Registry.ValueType.SZ && type !== Registry.ValueType.EXPAND_SZ) {
-          reject(`Registry key type is ${type}`);
+          reject(new Error(`Registry key type is ${type}`));
           return;
         }
         const value = Registry.queryValue(envKey, pathItem) as string;
@@ -119,14 +119,16 @@ const addBinToUserPath = () => {
       Registry.closeKey(envKey);
       resolve();
     } catch (error) {
-      reject(error);
+      reject(new Error(String(error)));
     }
   });
 };
 
 const logNotify = (withNotification: boolean, title: string, body: string, details?: {error?: any}) => {
   console.log(title, body, details);
-  withNotification && notify(title, body, details);
+  if (withNotification) {
+    notify(title, body, details);
+  }
 };
 
 export const installCLI = async (withNotification: boolean) => {
